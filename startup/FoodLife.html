@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodLife</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#222}
+.topbar{background:linear-gradient(135deg,#E24B4A 0%,#c93333 50%,#EF9F27 100%);padding:0 1rem;height:56px;display:flex;align-items:center;gap:10px}
+.logo{font-size:21px;font-weight:600;color:#fff;white-space:nowrap}
+.logo b{color:#FFE5B4;font-weight:600}
+.tsearch{flex:1;display:flex;gap:6px;max-width:380px;margin:0 auto}
+.tsearch input{flex:1;border:none;border-radius:8px;padding:7px 11px;font-size:13px;background:rgba(255,255,255,0.22);color:#fff;min-width:0}
+.tsearch input::placeholder{color:rgba(255,255,255,0.65)}
+.tsearch input:focus{outline:none;background:rgba(255,255,255,0.3)}
+.tnav{display:flex;gap:5px}
+.tnbtn{background:rgba(255,255,255,0.2);border:none;border-radius:8px;padding:7px 10px;color:#fff;font-size:12px;cursor:pointer;white-space:nowrap}
+.tnbtn:hover,.tnbtn.active{background:rgba(255,255,255,0.38)}
+.ptabs{display:flex;border-bottom:2px solid #efefef;background:#fff;overflow-x:auto}
+.ptab{padding:11px 16px;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;color:#666;white-space:nowrap;transition:all 0.15s}
+.ptab.on{border-bottom-color:#E24B4A;color:#E24B4A;font-weight:600}
+.brand-strip{display:flex;gap:7px;padding:9px 1rem;overflow-x:auto;border-bottom:1px solid #eee;background:#fafafa}
+.btag{padding:5px 13px;border-radius:16px;font-size:12px;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all 0.15s;white-space:nowrap}
+.btag.on{background:#E24B4A;color:#fff;border-color:#E24B4A}
+.sort-bar{display:flex;gap:7px;padding:8px 1rem;align-items:center;background:#fff8f5;border-bottom:1px solid #ffddd4;flex-wrap:wrap}
+.sort-lbl{font-size:12px;color:#888;white-space:nowrap}
+.schip{padding:5px 12px;border-radius:14px;font-size:12px;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;display:flex;align-items:center;gap:4px;transition:all 0.15s;white-space:nowrap}
+.schip.on{background:#E24B4A;color:#fff;border-color:#E24B4A}
+.schip:hover:not(.on){background:#ffe8e5;border-color:#E24B4A;color:#E24B4A}
+.schip .arrow{font-size:10px;opacity:0.7}
+.img-search-box{margin:10px 1rem;border:2px dashed #ffb3a7;border-radius:10px;padding:1rem;text-align:center;cursor:pointer;background:#fff9f8;transition:border-color 0.15s}
+.img-search-box:hover{border-color:#E24B4A;background:#fff5f3}
+.img-preview{display:flex;align-items:center;gap:10px;padding:8px 1rem;background:#fff9f0;border-bottom:1px solid #ffd096;font-size:13px;color:#633806}
+.img-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid #ffd096}
+.ai-badge{background:#7F77DD;color:#fff;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:11px;padding:1rem}
+.pcard{background:#fff;border:1px solid #e8e8e8;border-radius:12px;overflow:hidden;transition:all 0.15s;position:relative}
+.pcard:hover{border-color:#E24B4A;transform:translateY(-2px);box-shadow:0 4px 16px rgba(226,75,74,0.12)}
+.pcard.sel{border:2px solid #E24B4A}
+.pbadge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;z-index:2}
+.badge-new{background:#EAF3DE;color:#27500A}
+.badge-pop{background:#FAEEDA;color:#633806}
+.rank-badge{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;z-index:2;color:#fff}
+.food-art{height:128px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pbody{padding:10px 11px}
+.pname{font-size:13px;font-weight:600;color:#222;margin-bottom:3px}
+.pbrand{font-size:10px;padding:2px 7px;border-radius:8px;display:inline-block;margin-bottom:4px;font-weight:600}
+.prow{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.pprice{font-size:15px;font-weight:700;color:#E24B4A}
+.prating{font-size:11px;color:#EF9F27}
+.pcal{font-size:11px;color:#888}
+.pbtns{display:flex;gap:5px;margin-top:7px}
+.pbtn{flex:1;border:1px solid #ddd;border-radius:7px;padding:5px 4px;font-size:11px;cursor:pointer;background:transparent;color:#444;transition:background 0.15s;text-align:center}
+.pbtn:hover{background:#ffe8e5;color:#E24B4A;border-color:#E24B4A}
+.pbtn.r{background:#E24B4A;border-color:#E24B4A;color:#fff}
+.pbtn.r:hover{background:#c93333}
+.pbtn.sel-btn{background:#fff0e0;color:#884000;border-color:#ffd096}
+.del-wrap{padding:0.75rem 1rem 1.5rem}
+.del-hdr{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:10px;margin-bottom:10px}
+.del-hdr-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+.del-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px;margin-bottom:18px}
+.dcard{background:#fff;border:1px solid #e8e8e8;border-radius:12px;overflow:hidden}
+.dcard-hd{padding:10px 13px 8px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:8px}
+.dcard-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.dcard-svc{font-size:13px;font-weight:600;color:#222}
+.badge-fast{background:#EAF3DE;color:#27500A;font-size:10px;padding:2px 6px;border-radius:7px}
+.badge-cheap{background:#FFF0B3;color:#7A5A00;font-size:10px;padding:2px 6px;border-radius:7px}
+.dcard-bd{padding:9px 13px}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #f8f8f8;font-size:12px}
+.drow:last-child{border:none}
+.dlbl{color:#888}
+.dval{font-weight:600;color:#222}
+.dval.g{color:#1D9E75}.dval.r{color:#E24B4A}.dval.o{color:#EF9F27}
+.tbar{height:6px;background:#eee;border-radius:3px;margin:5px 0 2px;overflow:hidden}
+.tfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#1D9E75,#EF9F27)}
+.dcard-ft{padding:7px 13px;background:#fafafa;border-top:1px solid #f0f0f0}
+.promo-pill{background:#EAF3DE;color:#27500A;font-size:11px;padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:5px}
+.ord-btn{width:100%;background:#E24B4A;border:none;border-radius:8px;padding:7px;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.ord-btn:hover{background:#c93333}
+.br-wrap{padding:0.75rem 1rem 1.5rem}
+.br-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.br-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:10px 13px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.br-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.br-name{font-size:13px;font-weight:600;color:#222}
+.br-addr{font-size:12px;color:#666;margin-top:2px}
+.br-dist{font-size:11px;margin-top:3px;color:#888}
+.br-status{font-size:11px;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+.br-open{background:#EAF3DE;color:#27500A}
+.br-closed{background:#FCEBEB;color:#791F1F}
+.map-btn{background:transparent;border:1px solid #ddd;border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer;color:#666;flex-shrink:0}
+.map-btn:hover{background:#ffe8e5;color:#E24B4A;border-color:#E24B4A}
+.modal-bg{background:rgba(0,0,0,0.48);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:fixed;top:0;left:0;right:0;bottom:0;z-index:100}
+.mbox{background:#fff;border-radius:12px;padding:1.25rem;max-width:500px;width:100%;border:1px solid #e8e8e8;max-height:85vh;overflow-y:auto}
+.mbox h3{font-size:15px;font-weight:600;margin-bottom:10px}
+.mtb-row{display:flex;border-bottom:1px solid #eee;margin-bottom:10px}
+.mtb{padding:7px 12px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;color:#888}
+.mtb.on{border-bottom-color:#E24B4A;color:#E24B4A;font-weight:600}
+.nstat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+.nstat{border-radius:8px;padding:8px;text-align:center}
+.nv{font-size:16px;font-weight:700}.nl{font-size:10px;margin-top:2px;opacity:0.75}
+.ingr-pill{display:inline-block;padding:3px 9px;border-radius:10px;font-size:12px;margin:3px;background:#E6F1FB;color:#0C447C;border:1px solid #B5D4F4}
+.allerg-pill{display:inline-block;padding:3px 9px;border-radius:10px;font-size:12px;margin:3px;background:#fff3cd;color:#7A5A00;border:1px solid #ffd96e}
+.rev-card{background:#fafafa;border:1px solid #eee;border-radius:8px;padding:9px;margin-bottom:7px}
+.star-row{display:flex;gap:4px;font-size:22px;cursor:pointer;margin:5px 0}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.cmp-tbl th{padding:6px 7px;border-bottom:1px solid #eee;color:#888;text-align:left;font-weight:500}
+.cmp-tbl td{padding:6px 7px;border-bottom:1px solid #eee;color:#222;text-align:center}
+.best{color:#E24B4A;font-weight:700}
+.cmp-strip{background:linear-gradient(90deg,#fff9f0,#fff5f5);border:1px solid #ffd096;border-radius:10px;padding:8px 13px;margin:8px 1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cchip{background:#fff;border:1px solid #ddd;border-radius:13px;padding:3px 9px;font-size:12px;display:flex;align-items:center;gap:5px;color:#222}
+.cchip button{background:none;border:none;cursor:pointer;font-size:13px;color:#888;padding:0}
+.res-count{font-size:12px;color:#888;margin-left:auto;padding:0 1rem 0 0;align-self:center}
+</style>
+</head>
+<body>
+ 
+<div class="topbar">
+  <div class="logo">Food<b>Life</b></div>
+  <div class="tsearch">
+    <input type="text" id="srchIn" placeholder="Məhsul axtar..." oninput="doSearch()">
+    <label class="tnbtn" style="cursor:pointer" title="Şəkillə axtar">
+      📷
+      <input type="file" id="imgIn" accept="image/*" style="display:none" onchange="imgSearch(event)">
+    </label>
+  </div>
+  <div class="tnav">
+    <button class="tnbtn" onclick="goTab('products')">🍔</button>
+    <button class="tnbtn" onclick="goTab('delivery')">🚚</button>
+    <button class="tnbtn" onclick="goTab('branches')">📍</button>
+    <button class="tnbtn" onclick="openCmp()">⚖️ <span id="cCnt">0</span></button>
+  </div>
+</div>
+ 
+<div class="ptabs">
+  <div class="ptab on" id="ptab-products" onclick="goTab('products')">🍔 Məhsullar</div>
+  <div class="ptab" id="ptab-delivery" onclick="goTab('delivery')">🚚 Çatdırılma</div>
+  <div class="ptab" id="ptab-branches" onclick="goTab('branches')">📍 Filiallar</div>
+  <div class="ptab" id="ptab-compare" onclick="openCmp()">⚖️ Müqayisə</div>
+</div>
+ 
+<div class="brand-strip">
+  <div class="btag on" onclick="setBrand('all',this)">Hamısı</div>
+  <div class="btag" onclick="setBrand('kfc',this)">🍗 KFC</div>
+  <div class="btag" onclick="setBrand('mcdonalds',this)">🍟 McDonald's</div>
+  <div class="btag" onclick="setBrand('burgerking',this)">👑 Burger King</div>
+  <div class="btag" onclick="setBrand('pizzahut',this)">🍕 Pizza Hut</div>
+</div>
+ 
+<div id="sortbar" class="sort-bar">
+  <span class="sort-lbl">Sırala:</span>
+  <div class="schip on" id="sc-price" onclick="setSort('price-asc',this)">Qiymət <span class="arrow" id="arr-price">↑</span></div>
+  <div class="schip" id="sc-cal" onclick="setSort('cal-asc',this)">Kalori <span class="arrow" id="arr-cal">↑</span></div>
+  <div class="schip" id="sc-rating" onclick="setSort('rating-desc',this)">Reytinq <span class="arrow" id="arr-rating">↓</span></div>
+  <div class="schip" id="sc-protein" onclick="setSort('protein-desc',this)">Protein <span class="arrow" id="arr-protein">↓</span></div>
+  <span id="resCount" class="res-count"></span>
+</div>
+ 
+<div id="imgResultBar" style="display:none" class="img-preview">
+  <img id="imgThumb" class="img-thumb" src="" alt="">
+  <div>
+    <span class="ai-badge">AI Axtarış</span>
+    <div id="imgResultTxt" style="margin-top:3px;font-size:13px"></div>
+  </div>
+  <button onclick="clearImgSearch()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:20px;color:#888">✕</button>
+</div>
+ 
+<div id="pg-products">
+  <div id="cmpStripEl" style="display:none">
+    <div class="cmp-strip">
+      <span style="font-size:13px;font-weight:600;color:#E24B4A">⚖️</span>
+      <div id="cmpChips" style="display:flex;gap:5px;flex:1;flex-wrap:wrap"></div>
+      <button style="background:#E24B4A;border:none;border-radius:8px;padding:5px 12px;color:#fff;font-size:12px;cursor:pointer;font-weight:600" onclick="openCmp()">Müqayisə et</button>
+      <button style="background:transparent;border:1px solid #ddd;border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer;color:#444" onclick="clearCmp()">Təmizlə</button>
+    </div>
+  </div>
+  <div id="prodGrid" class="prod-grid"></div>
+</div>
+ 
+<div id="pg-delivery" style="display:none">
+  <div id="delContent" class="del-wrap"></div>
+</div>
+ 
+<div id="pg-branches" style="display:none">
+  <div id="brContent" class="br-wrap"></div>
+</div>
+ 
+<!-- Modal overlay -->
+<div id="pg-modal" style="display:none">
+  <div id="modalInner"></div>
+</div>
+ 
+<script>
+const B={
+  kfc:{n:"KFC",e:"🍗",c:"#E8380D",bg:"#FFF0E0",pill:"background:#FFE5B4;color:#884000",url:"https://kfc.com.az"},
+  mcdonalds:{n:"McDonald's",e:"🍟",c:"#FFC72C",bg:"#FFFBE0",pill:"background:#FFF0B3;color:#7A5A00",url:"https://mcdonalds.az"},
+  burgerking:{n:"Burger King",e:"👑",c:"#FF8C00",bg:"#FFF3E0",pill:"background:#FFD6B4;color:#6B2B00",url:"https://burgerking.az"},
+  pizzahut:{n:"Pizza Hut",e:"🍕",c:"#D62828",bg:"#FFE0E0",pill:"background:#FFE0E0;color:#8B0000",url:"https://pizzahut.az"}
+};
+ 
+/* ---- SVG Food Art ---- */
+function svg_burger(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><ellipse cx="100" cy="36" rx="60" ry="24" fill="#D4843C"/><ellipse cx="100" cy="34" rx="58" ry="22" fill="#E8973A"/><ellipse cx="100" cy="32" rx="55" ry="18" fill="#F5A840"/><ellipse cx="100" cy="30" rx="52" ry="14" fill="#F7B85A"/><circle cx="82" cy="28" r="4" fill="#F7B85A" opacity="0.5"/><circle cx="108" cy="25" r="3" fill="#F7B85A" opacity="0.5"/><circle cx="122" cy="30" r="5" fill="#F7B85A" opacity="0.5"/><rect x="36" y="60" width="128" height="11" rx="2" fill="#5D9B3C"/><rect x="34" y="71" width="132" height="16" rx="3" fill="#CC2200"/><rect x="34" y="84" width="132" height="8" fill="#E8380D"/><ellipse cx="100" cy="92" rx="66" ry="9" fill="#C8701C"/><rect x="34" y="88" width="132" height="22" rx="8" fill="#C8701C"/><ellipse cx="100" cy="88" rx="66" ry="10" fill="#D4843C"/><rect x="34" y="82" width="132" height="8" fill="#F5C34A" opacity="0.5"/></svg>`;}
+function svg_wings(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><ellipse cx="62" cy="78" rx="34" ry="16" fill="#B86010" transform="rotate(-25 62 78)"/><ellipse cx="60" cy="75" rx="30" ry="13" fill="#C8701C" transform="rotate(-25 60 75)"/><ellipse cx="58" cy="72" rx="26" ry="10" fill="#D4843C" transform="rotate(-25 58 72)"/><ellipse cx="138" cy="74" rx="34" ry="16" fill="#B86010" transform="rotate(25 138 74)"/><ellipse cx="140" cy="71" rx="30" ry="13" fill="#C8701C" transform="rotate(25 140 71)"/><ellipse cx="142" cy="68" rx="26" ry="10" fill="#D4843C" transform="rotate(25 142 68)"/><circle cx="55" cy="62" r="4" fill="#E8380D" opacity="0.8"/><circle cx="68" cy="67" r="3" fill="#E8380D" opacity="0.8"/><circle cx="136" cy="60" r="4" fill="#E8380D" opacity="0.8"/><circle cx="146" cy="66" r="3" fill="#E8380D" opacity="0.8"/><ellipse cx="100" cy="96" rx="24" ry="10" fill="#8BC34A" opacity="0.4"/></svg>`;}
+function svg_fries(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><rect x="58" y="68" width="84" height="42" rx="5" fill="#CC2200"/><rect x="60" y="66" width="80" height="40" rx="5" fill="#E8380D"/><text x="100" y="92" text-anchor="middle" font-size="13" fill="#FFD54F" font-weight="bold">M</text><rect x="70" y="18" width="10" height="52" rx="5" fill="#F7C842" transform="rotate(-6 70 42)"/><rect x="84" y="13" width="10" height="57" rx="5" fill="#EDB830"/><rect x="98" y="16" width="10" height="55" rx="5" fill="#F7C842"/><rect x="112" y="14" width="10" height="57" rx="5" fill="#EDB830" transform="rotate(4 112 42)"/><rect x="125" y="18" width="10" height="52" rx="5" fill="#F7C842" transform="rotate(7 125 42)"/></svg>`;}
+function svg_pizza(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><ellipse cx="100" cy="72" rx="72" ry="52" fill="#E8973A"/><ellipse cx="100" cy="71" rx="68" ry="49" fill="#F5C842" opacity="0.85"/><ellipse cx="100" cy="70" rx="63" ry="45" fill="#F5C842"/><ellipse cx="100" cy="70" rx="57" ry="41" fill="#CC3300" opacity="0.9"/><ellipse cx="100" cy="70" rx="51" ry="37" fill="#CC2200"/><ellipse cx="100" cy="70" rx="46" ry="33" fill="#EAA920" opacity="0.9"/><circle cx="82" cy="61" r="8" fill="#CC2200"/><circle cx="118" cy="59" r="8" fill="#CC2200"/><circle cx="92" cy="82" r="8" fill="#CC2200"/><circle cx="116" cy="82" r="6" fill="#CC2200"/><circle cx="82" cy="61" r="6" fill="#E8380D"/><circle cx="118" cy="59" r="6" fill="#E8380D"/><circle cx="92" cy="82" r="6" fill="#E8380D"/><circle cx="80" cy="72" r="5" fill="#1D9E75"/><circle cx="110" cy="75" r="5" fill="#1D9E75"/><circle cx="96" cy="55" r="4" fill="#1D9E75"/><ellipse cx="100" cy="72" rx="72" ry="52" fill="none" stroke="#E8973A" stroke-width="9"/></svg>`;}
+function svg_icecream(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><rect x="82" y="82" width="36" height="28" rx="5" fill="#D4843C"/><line x1="82" y1="90" x2="118" y2="90" stroke="#B86010" stroke-width="1.5"/><line x1="82" y1="98" x2="118" y2="98" stroke="#B86010" stroke-width="1.5"/><line x1="90" y1="82" x2="90" y2="110" stroke="#B86010" stroke-width="1.5"/><line x1="100" y1="82" x2="100" y2="110" stroke="#B86010" stroke-width="1.5"/><line x1="110" y1="82" x2="110" y2="110" stroke="#B86010" stroke-width="1.5"/><circle cx="100" cy="56" r="28" fill="#FFF8F0"/><circle cx="90" cy="48" r="16" fill="#FFF0E8"/><circle cx="112" cy="52" r="14" fill="#FFF0E8"/><circle cx="100" cy="64" r="16" fill="#FFF0E8"/><circle cx="86" cy="56" r="5" fill="#4E342E"/><circle cx="102" cy="48" r="5" fill="#4E342E"/><circle cx="114" cy="58" r="5" fill="#4E342E"/><circle cx="90" cy="65" r="4" fill="#4E342E"/></svg>`;}
+function svg_sandwich(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><ellipse cx="100" cy="38" rx="58" ry="22" fill="#E8973A"/><ellipse cx="100" cy="36" rx="56" ry="20" fill="#F5A840"/><ellipse cx="100" cy="34" rx="52" ry="16" fill="#F7B85A"/><rect x="38" y="60" width="124" height="9" rx="2" fill="#5D9B3C"/><rect x="36" y="68" width="128" height="20" rx="4" fill="#E8973A"/><rect x="38" y="68" width="124" height="18" rx="3" fill="#F0A030"/><rect x="36" y="86" width="128" height="16" rx="8" fill="#C8701C"/><ellipse cx="100" cy="86" rx="64" ry="10" fill="#D4843C"/><circle cx="80" cy="33" r="3" fill="#F7B85A" opacity="0.5"/><circle cx="114" cy="30" r="4" fill="#F7B85A" opacity="0.5"/></svg>`;}
+function svg_onion(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><ellipse cx="100" cy="80" rx="54" ry="18" fill="#E8973A"/><ellipse cx="100" cy="78" rx="52" ry="16" fill="#F5C842"/><ellipse cx="100" cy="76" rx="47" ry="13" fill="#F5A840"/><ellipse cx="100" cy="76" rx="30" ry="7" fill="${bg}"/><ellipse cx="100" cy="58" rx="50" ry="17" fill="#E8973A"/><ellipse cx="100" cy="56" rx="48" ry="15" fill="#F5C842"/><ellipse cx="100" cy="54" rx="43" ry="12" fill="#F5A840"/><ellipse cx="100" cy="54" rx="27" ry="6" fill="${bg}"/><ellipse cx="100" cy="37" rx="44" ry="14" fill="#E8973A" opacity="0.7"/><ellipse cx="100" cy="35" rx="42" ry="12" fill="#F5C842" opacity="0.7"/><ellipse cx="100" cy="33" rx="37" ry="9" fill="#F5A840" opacity="0.7"/><ellipse cx="100" cy="33" rx="22" ry="5" fill="${bg}" opacity="0.8"/></svg>`;}
+function svg_bread(bg){return`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" style="background:${bg};width:100%;height:100%"><rect x="28" y="58" width="144" height="50" rx="12" fill="#C8701C"/><rect x="28" y="55" width="144" height="48" rx="12" fill="#D4843C"/><rect x="28" y="52" width="144" height="44" rx="12" fill="#E59A30"/><ellipse cx="100" cy="52" rx="72" ry="22" fill="#F5A840"/><ellipse cx="100" cy="50" rx="70" ry="20" fill="#F7B85A"/><rect x="48" y="78" width="104" height="5" rx="2" fill="#B86010" opacity="0.25"/><rect x="48" y="88" width="104" height="5" rx="2" fill="#B86010" opacity="0.25"/><circle cx="70" cy="62" r="3" fill="#FFE082" opacity="0.5"/><circle cx="90" cy="57" r="3" fill="#FFE082" opacity="0.5"/><circle cx="110" cy="60" r="3" fill="#FFE082" opacity="0.5"/><circle cx="130" cy="63" r="3" fill="#FFE082" opacity="0.5"/></svg>`;}
+ 
+function getSVG(type,bg){
+  const map={burger:svg_burger,wings:svg_wings,fries:svg_fries,pizza:svg_pizza,icecream:svg_icecream,sandwich:svg_sandwich,onion:svg_onion,bread:svg_bread};
+  return (map[type]||svg_burger)(bg);
+}
+ 
+/* ---- Data ---- */
+const products=[
+  {id:1,name:"Zinger Burger",brand:"kfc",price:8.50,cal:490,protein:28,fat:24,carbs:42,sodium:980,sugar:6,rating:4.5,type:"burger",badge:"pop",ingredients:["Toyuq filesi","Çörək","Mayonez","Kəlam","Turşu"],allergens:["Gluten","Süd","Yumurta"] , img:"images/Zinger.png"},
+  {id:2,name:"Hot Wings 5x",brand:"kfc",price:6.00,cal:380,protein:24,fat:22,carbs:18,sodium:760,sugar:1,rating:4.7,type:"wings",badge:"pop",ingredients:["Toyuq qanadı","Baharatlı xəmir","Bitki yağı"],allergens:["Gluten"],img:"images/5HotWings.png"},
+  {id:3,name:"Popcorn Chicken",brand:"kfc",price:5.50,cal:320,protein:20,fat:18,carbs:24,sodium:640,sugar:1,rating:4.4,type:"wings",badge:"new",ingredients:["Toyuq parçaları","Xəmir","Bitki yağı"],allergens:["Gluten"], img:"images/Popcorn_Reg.png"},
+  {id:4,name:"Colonel Burger",brand:"kfc",price:9.00,cal:540,protein:32,fat:28,carbs:46,sodium:1020,sugar:7,rating:4.6,type:"burger",badge:"",ingredients:["Toyuq","Çörək","Sous","Kəlam","Pomidor"],allergens:["Gluten","Süd"] , img:"images/3431-2024-11-27.png"},
+  {id:5,name:"Big Mac",brand:"mcdonalds",price:9.50,cal:550,protein:25,fat:30,carbs:44,sodium:1010,sugar:9,rating:4.5,type:"burger",badge:"pop",ingredients:["2x Kotlet","Üçqatlı çörək","Big Mac sous","Kəlam","Pendir","Soğan","Turşu"],allergens:["Gluten","Süd","Soya"] , img:"images/bigmac.png"},
+  {id:6,name:"McChicken",brand:"mcdonalds",price:7.50,cal:420,protein:22,fat:20,carbs:38,sodium:840,sugar:5,rating:4.3,type:"sandwich",badge:"",ingredients:["Toyuq filesi","Çörək","Mayonez","Kəlam"],allergens:["Gluten","Yumurta","Süd"] , img:"images/McD-McChicken_(infobox).png"},
+  {id:7,name:"McFlurry Oreo",brand:"mcdonalds",price:4.50,cal:340,protein:8,fat:12,carbs:52,sodium:180,sugar:42,rating:4.8,type:"icecream",badge:"new",ingredients:["Dondurma","Oreo biskvit","Karamel sous"],allergens:["Süd","Gluten"] , img:"images/McFlurry_Oreo_500.png"},
+  {id:8,name:"McFries Large",brand:"mcdonalds",price:3.50,cal:490,protein:6,fat:24,carbs:64,sodium:400,sugar:0,rating:4.6,type:"fries",badge:"pop",ingredients:["Kartof","Bitki yağı","Duz"],allergens:[] , img:"images/fries.png"},
+  {id:9,name:"Whopper",brand:"burgerking",price:10.00,cal:670,protein:28,fat:40,carbs:48,sodium:1070,sugar:11,rating:4.4,type:"burger",badge:"pop",ingredients:["Mal əti","Sezam çörəyi","Pomidor","Kəlam","Turşu","Mayonez","Ketçup"],allergens:["Gluten","Süd","Yumurta"] , img:"images/Whopper-01_1.png"},
+  {id:10,name:"Chicken Royale",brand:"burgerking",price:8.00,cal:480,protein:26,fat:22,carbs:42,sodium:880,sugar:6,rating:4.3,type:"sandwich",badge:"",ingredients:["Toyuq filesi","Hollandaise sous","Pomidor","Kəlam"],allergens:["Gluten","Süd"] , img:"images/Chicken Royale-01_2.png"},
+  {id:11,name:"Onion Rings",brand:"burgerking",price:4.00,cal:320,protein:4,fat:16,carbs:42,sodium:660,sugar:3,rating:4.2,type:"onion",badge:"",ingredients:["Soğan","Xəmir","Bitki yağı","Duz"],allergens:["Gluten"] , img:"images/or-site.png"},
+  {id:12,name:"Pepperoni Pizza",brand:"pizzahut",price:14.00,cal:870,protein:38,fat:36,carbs:92,sodium:1540,sugar:8,rating:4.6,type:"pizza",badge:"pop",ingredients:["Pizza xəmiri","Pomidor sous","Mozzarella","Pepperoni","Zeytun yağı"],allergens:["Gluten","Süd"] , img:"images/dh183ia-1c50483c-7c21-4bac-b2b6-4257fdfe4829.png"},
+  {id:13,name:"BBQ Chicken Pizza",brand:"pizzahut",price:15.00,cal:920,protein:42,fat:34,carbs:96,sodium:1480,sugar:12,rating:4.7,type:"pizza",badge:"new",ingredients:["Xəmir","BBQ sous","Toyuq","Mozzarella","Soğan","Bibər"],allergens:["Gluten","Süd"] , img:"images/delicious-bbq-chicken-pizza-isolated-on-transparent-background-png.png"},
+  {id:14,name:"Garlic Bread",brand:"pizzahut",price:5.00,cal:310,protein:8,fat:12,carbs:44,sodium:480,sugar:2,rating:4.3,type:"bread",badge:"",ingredients:["Çörək","Sarımsaq yağı","Maydanoz","Pendir"],allergens:["Gluten","Süd"] , img:"images/side-garlic-bread.png"}
+];
+ 
+const delivery={
+  kfc:[
+    {svc:"Wolt",icon:"🔵",bg:"#E6F1FB",time_min:25,time_max:35,fee:1.50,min_order:8,rating:4.6,promo:"İlk sifariş pulsuz",url:"https://wolt.com",riders:12},
+    {svc:"Bolt Food",icon:"🟢",bg:"#EAF3DE",time_min:20,time_max:30,fee:1.20,min_order:6,rating:4.5,promo:"",url:"https://food.bolt.eu",riders:8},
+    {svc:"KFC App",icon:"🍗",bg:"#FFF0E0",time_min:30,time_max:45,fee:0,min_order:15,rating:4.4,promo:"-10% ilk sifariş",url:"https://kfc.com.az",riders:5}
+  ],
+  mcdonalds:[
+    {svc:"Wolt",icon:"🔵",bg:"#E6F1FB",time_min:20,time_max:30,fee:1.50,min_order:8,rating:4.7,promo:"",url:"https://wolt.com",riders:15},
+    {svc:"Bolt Food",icon:"🟢",bg:"#EAF3DE",time_min:18,time_max:28,fee:1.00,min_order:5,rating:4.5,promo:"Həftəsonu -15%",url:"https://food.bolt.eu",riders:10},
+    {svc:"McDelivery",icon:"🟡",bg:"#FFFBE0",time_min:25,time_max:40,fee:0,min_order:20,rating:4.3,promo:"",url:"https://mcdonalds.az",riders:7}
+  ],
+  burgerking:[
+    {svc:"Wolt",icon:"🔵",bg:"#E6F1FB",time_min:25,time_max:40,fee:1.50,min_order:8,rating:4.5,promo:"",url:"https://wolt.com",riders:9},
+    {svc:"Bolt Food",icon:"🟢",bg:"#EAF3DE",time_min:22,time_max:35,fee:1.30,min_order:7,rating:4.4,promo:"-20% axşam",url:"https://food.bolt.eu",riders:6}
+  ],
+  pizzahut:[
+    {svc:"Wolt",icon:"🔵",bg:"#E6F1FB",time_min:35,time_max:50,fee:1.50,min_order:10,rating:4.6,promo:"",url:"https://wolt.com",riders:8},
+    {svc:"Pizza Hut App",icon:"🍕",bg:"#FFE0E0",time_min:30,time_max:45,fee:0,min_order:20,rating:4.5,promo:"-20% onlayn",url:"https://pizzahut.az",riders:4}
+  ]
+};
+ 
+const branches={
+  kfc:[
+    {n:"KFC Nizami",a:"Nizami küçəsi 56",d:"0.3 km",h:"09:00–23:00",open:true,phone:"+994 12 555 01 01"},
+    {n:"KFC 28 May",a:"28 May küçəsi 12",d:"1.1 km",h:"09:00–23:00",open:true,phone:"+994 12 555 02 02"},
+    {n:"KFC Nərimanov",a:"Nərimanov pr. 84",d:"2.4 km",h:"10:00–22:00",open:false,phone:"+994 12 555 03 03"},
+    {n:"KFC Gənclik Mall",a:"Gənclik Mall, 3-cü mərtəbə",d:"2.8 km",h:"10:00–22:00",open:true,phone:"+994 12 555 04 04"}
+  ],
+  mcdonalds:[
+    {n:"McDonald's İçəri Şəhər",a:"Əliağa Vahid küçəsi 2",d:"0.5 km",h:"08:00–00:00",open:true,phone:"+994 12 555 10 10"},
+    {n:"McDonald's Bulvar",a:"Neftçilər pr. 6",d:"0.8 km",h:"08:00–00:00",open:true,phone:"+994 12 555 11 11"},
+    {n:"McDonald's Xətai",a:"Xətai pr. 32",d:"3.2 km",h:"09:00–23:00",open:true,phone:"+994 12 555 12 12"}
+  ],
+  burgerking:[
+    {n:"BK 28 Mall",a:"28 Mall, 2-ci mərtəbə",d:"1.3 km",h:"10:00–22:00",open:true,phone:"+994 12 555 20 20"},
+    {n:"BK Port Baku",a:"Port Baku Mall, 1-ci mərtəbə",d:"1.9 km",h:"10:00–22:00",open:true,phone:"+994 12 555 21 21"}
+  ],
+  pizzahut:[
+    {n:"Pizza Hut Neftçilər",a:"Neftçilər pr. 88",d:"0.9 km",h:"11:00–23:00",open:true,phone:"+994 12 555 30 30"},
+    {n:"Pizza Hut Əhmədli",a:"Əhmədli pr. 14",d:"4.1 km",h:"11:00–23:00",open:false,phone:"+994 12 555 31 31"}
+  ]
+};
+ 
+const revs={
+  1:[{u:"Aytən M.",s:5,t:"Çox ləzzətli idi!",d:"2 gün əvvəl"},{u:"Kənan R.",s:4,t:"Yaxşıdır, biraz bahalı.",d:"1 həftə əvvəl"}],
+  5:[{u:"Tural H.",s:5,t:"Klassik Big Mac — heç vaxt məyus etmir!",d:"3 gün əvvəl"},{u:"Nigar S.",s:4,t:"Yaxşı amma ət az idi.",d:"5 gün əvvəl"}],
+  9:[{u:"Murad İ.",s:4,t:"Böyük kotlet, biraz yağlıdır.",d:"1 həftə əvvəl"},{u:"Könül Y.",s:5,t:"Həmişə favoritimdir!",d:"2 həftə əvvəl"}],
+  12:[{u:"Əli C.",s:5,t:"Mükəmməl pizza!",d:"1 gün əvvəl"},{u:"Şəbnəm K.",s:4,t:"Ləzzətlidir.",d:"4 gün əvvəl"}]
+};
+ 
+const IMG_KEYWORDS={
+  burger:["burger","hamburger","bun","kotlet"],
+  wings:["wings","qanad","toyuq","chicken","popcorn"],
+  fries:["fries","kartof","potato"],
+  pizza:["pizza"],
+  icecream:["mcflurry","dondurma","ice","flurry","oreo"],
+  sandwich:["sandwich","mcchicken","royale"],
+  onion:["onion","rings","soğan"],
+  bread:["bread","çörək","garlic"]
+};
+ 
+let curBrand="all", curSort="price-asc", cmpList=[], curPage="products", srchQ="", myStars=0;
+ 
+function goTab(p){
+  curPage=p;
+  ["products","delivery","branches","modal"].forEach(x=>{
+    const el=document.getElementById("pg-"+x);
+    if(el)el.style.display=x===p?"block":"none";
+  });
+  document.querySelectorAll(".ptab").forEach(x=>x.classList.remove("on"));
+  const t=document.getElementById("ptab-"+p);
+  if(t)t.classList.add("on");
+  document.getElementById("sortbar").style.display=p==="products"?"flex":"none";
+  if(p==="delivery")renderDelivery();
+  if(p==="branches")renderBranches();
+  if(p==="products")renderProducts();
+}
+ 
+function setBrand(b,el){
+  curBrand=b;
+  document.querySelectorAll(".btag").forEach(x=>x.classList.remove("on"));
+  el.classList.add("on");
+  if(curPage==="products")renderProducts();
+  if(curPage==="delivery")renderDelivery();
+  if(curPage==="branches")renderBranches();
+}
+ 
+function setSort(s,el){
+  const key=s.split("-")[0];
+  const dir=s.split("-")[1];
+  if(curSort===s){s=key+"-"+(dir==="asc"?"desc":"asc");}
+  curSort=s;
+  document.querySelectorAll(".schip").forEach(x=>x.classList.remove("on"));
+  el.classList.add("on");
+  const arrowIds=["price","cal","rating","protein"];
+  arrowIds.forEach(k=>{const a=document.getElementById("arr-"+k);if(a)a.textContent="·";});
+  const[ck,cd]=curSort.split("-");
+  const ca=document.getElementById("arr-"+ck);
+  if(ca)ca.textContent=cd==="asc"?"↑":"↓";
+  renderProducts();
+}
+ 
+function doSearch(){
+  srchQ=document.getElementById("srchIn").value.toLowerCase();
+  document.getElementById("imgResultBar").style.display="none";
+  if(curPage!=="products")goTab("products");
+  else renderProducts();
+}
+ 
+function imgSearch(e){
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    document.getElementById("imgThumb").src=ev.target.result;
+    document.getElementById("imgResultBar").style.display="flex";
+    document.getElementById("imgResultTxt").textContent="Şəkil analiz edilir...";
+    setTimeout(()=>{
+      const name=f.name.toLowerCase();
+      let matchType="burger";
+      for(const[type,kws]of Object.entries(IMG_KEYWORDS)){
+        if(kws.some(k=>name.includes(k))){matchType=type;break;}
+      }
+      const typeNames={burger:"burger",wings:"toyuq qanadı",fries:"kartof",pizza:"pizza",icecream:"dondurma",sandwich:"sandwich",onion:"soğan halqası",bread:"çörək"};
+      const typeName=typeNames[matchType]||"burger";
+      srchQ=typeName.split(" ")[0];
+      document.getElementById("imgResultTxt").innerHTML=`<b>AI nəticəsi:</b> Şəkildə "<b>${typeName}</b>" aşkar edildi`;
+      if(curPage!=="products")goTab("products");
+      else renderProducts();
+    },900);
+  };
+  reader.readAsDataURL(f);
+  e.target.value="";
+}
+ 
+function clearImgSearch(){
+  srchQ="";
+  document.getElementById("imgResultBar").style.display="none";
+  document.getElementById("srchIn").value="";
+  renderProducts();
+}
+ 
+function renderProducts(){
+  let list=products.filter(p=>{
+    if(curBrand!=="all"&&p.brand!==curBrand)return false;
+    if(srchQ){
+      const hay=p.name.toLowerCase()+" "+B[p.brand].n.toLowerCase()+" "+p.ingredients.join(" ").toLowerCase();
+      if(!hay.includes(srchQ))return false;
+    }
+    return true;
+  });
+  const[sk,sd]=curSort.split("-");
+  list.sort((a,b)=>sd==="asc"?a[sk]-b[sk]:b[sk]-a[sk]);
+  document.getElementById("resCount").textContent=list.length+" məhsul";
+  const sortColors={price:"#fff5f5",cal:"#FFF9E0",rating:"#FAEEDA",protein:"#f0faf6"};
+  const sortTextColors={price:"#E24B4A",cal:"#854F0B",rating:"#EF9F27",protein:"#1D9E75"};
+  const sortUnits={price:" ₼",cal:" kal",rating:"⭐",protein:"g"};
+  const rankColors=["#E24B4A","#EF9F27","#1D9E75"];
+  const g=document.getElementById("prodGrid");
+  g.innerHTML=list.map((p,i)=>{
+    const b=B[p.brand];
+    const sel=cmpList.includes(p.id);
+    const stars="★".repeat(Math.floor(p.rating))+"☆".repeat(5-Math.floor(p.rating));
+    const sv=sk==="price"?p.price.toFixed(2)+sortUnits[sk]:sk==="rating"?p.rating+sortUnits[sk]:p[sk]+sortUnits[sk];
+    const rbg=i<3?rankColors[i]:"#aaa";
+    return`<div class="pcard${sel?" sel":""}">
+      ${p.badge==="new"?'<span class="pbadge badge-new">Yeni</span>':p.badge==="pop"?'<span class="pbadge badge-pop">Populyar</span>':""}
+      <div class="rank-badge" style="background:${rbg}">${i+1}</div>
+      <div class="food-art" style="background:${b.bg}">
+        <img src="${p.img}" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+      <div class="pbody">
+        <div class="pname">${p.name}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span class="pbrand" style="${b.pill}">${b.n}</span>
+          <span style="font-size:11px;color:#EF9F27">${stars} <span style="color:#888">${p.rating}</span></span>
+        </div>
+        <div class="prow">
+          <span class="pprice">${p.price.toFixed(2)} ₼</span>
+          <span style="background:${sortColors[sk]};color:${sortTextColors[sk]};font-size:11px;padding:2px 7px;border-radius:7px;font-weight:600">${sv}</span>
+        </div>
+        <div class="pcal">${p.cal} kal · ${p.protein}g protein · ${p.fat}g yağ</div>
+        <div class="pbtns">
+          <button class="pbtn" onclick="openProd(${p.id})">📋 Tərkib</button>
+          <button class="pbtn" onclick="openRev(${p.id},'${p.name.replace(/'/g,"\\'")}')">💬</button>
+          <button class="pbtn${sel?" sel-btn":""}" onclick="toggleCmp(${p.id})">${sel?"✓":"+"}</button>
+          <button class="pbtn r" onclick="window.open('${b.url}','_blank')">↗</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+ 
+function renderDelivery(){
+  const brands=curBrand==="all"?Object.keys(B):[curBrand];
+  let html="";
+  brands.forEach(br=>{
+    const b=B[br];
+    const dels=delivery[br]||[];
+    if(!dels.length)return;
+    const minT=Math.min(...dels.map(d=>d.time_min));
+    const minF=Math.min(...dels.map(d=>d.fee));
+    html+=`<div>
+      <div class="del-hdr" style="background:${b.bg}">
+        <div class="del-hdr-icon" style="background:${b.c}22;border-radius:50%">${b.e}</div>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:#222">${b.n}</div>
+          <div style="font-size:12px;color:#666">Ən sürətli: ${minT} dəq · Min çatdırılma: ${minF===0?"Pulsuz":minF.toFixed(2)+" ₼"}</div>
+        </div>
+      </div>
+      <div class="del-grid">`;
+    dels.forEach(d=>{
+      const fastest=d.time_min===Math.min(...dels.map(x=>x.time_min));
+      const cheapest=d.fee===Math.min(...dels.map(x=>x.fee));
+      const pct=Math.round(Math.max(0,Math.min(100,((d.time_min-15)/45)*100)));
+      html+=`<div class="dcard">
+        <div class="dcard-hd">
+          <div class="dcard-icon" style="background:${d.bg}">${d.icon}</div>
+          <div style="flex:1">
+            <div class="dcard-svc">${d.svc}</div>
+            <div style="display:flex;gap:4px;margin-top:2px;flex-wrap:wrap">
+              ${fastest?'<span class="badge-fast">⚡ Ən sürətli</span>':""}
+              ${cheapest?'<span class="badge-cheap">💰 Ən ucuz</span>':""}
+            </div>
+          </div>
+          <span style="background:#EAF3DE;color:#27500A;font-size:11px;padding:2px 7px;border-radius:8px">Açıqdır</span>
+        </div>
+        <div class="dcard-bd">
+          <div style="font-size:12px;color:#888;margin-bottom:2px">Çatdırılma müddəti</div>
+          <div class="tbar"><div class="tfill" style="width:${pct}%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span>Hazırlama</span><span style="font-weight:600;color:#222">${d.time_min}–${d.time_max} dəq</span></div>
+          <div class="drow" style="margin-top:6px"><span class="dlbl">Çatdırılma haqqı</span><span class="dval ${d.fee===0?"g":"r"}">${d.fee===0?"Pulsuz":d.fee.toFixed(2)+" ₼"}</span></div>
+          <div class="drow"><span class="dlbl">Min sifariş</span><span class="dval">${d.min_order.toFixed(2)} ₼</span></div>
+          <div class="drow"><span class="dlbl">Reytinq</span><span class="dval o">${"★".repeat(Math.floor(d.rating))} ${d.rating}</span></div>
+          <div class="drow"><span class="dlbl">Aktiv kuryer</span><span class="dval g">${d.riders} nəfər</span></div>
+        </div>
+        <div class="dcard-ft">
+          ${d.promo?`<div class="promo-pill">🎁 ${d.promo}</div>`:""}
+          <button class="ord-btn" onclick="window.open('${d.url}','_blank')">Sifariş ver →</button>
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  document.getElementById("delContent").innerHTML=html;
+}
+ 
+function renderBranches(){
+  const brands=curBrand==="all"?Object.keys(B):[curBrand];
+  let html="";
+  brands.forEach(br=>{
+    const b=B[br];
+    const brs=branches[br]||[];
+    if(!brs.length)return;
+    const openCount=brs.filter(x=>x.open).length;
+    html+=`<div class="br-hdr">
+      <div style="width:36px;height:36px;border-radius:50%;background:${b.bg};display:flex;align-items:center;justify-content:center;font-size:20px">${b.e}</div>
+      <div><div style="font-size:14px;font-weight:600">${b.n} filialları</div><div style="font-size:12px;color:#666">${brs.length} filial · ${openCount} açıqdır</div></div>
+    </div>`;
+    brs.forEach(br2=>{
+      const mapsUrl="https://maps.google.com/?q="+encodeURIComponent(br2.a+", Bakı");
+      html+=`<div class="br-card">
+        <div class="br-dot" style="background:${br2.open?"#1D9E75":"#E24B4A"}"></div>
+        <div class="br-info" style="flex:1">
+          <div class="br-name">${br2.n}</div>
+          <div class="br-addr">📍 ${br2.a}</div>
+          <div class="br-dist">🚶 ${br2.d} · ⏰ ${br2.h} · 📞 ${br2.phone}</div>
+        </div>
+        <span class="br-status ${br2.open?"br-open":"br-closed"}">${br2.open?"Açıqdır":"Bağlıdır"}</span>
+        <button class="map-btn" onclick="window.open('${mapsUrl}','_blank')">🗺️ Xəritə</button>
+      </div>`;
+    });
+  });
+  document.getElementById("brContent").innerHTML=html;
+}
+ 
+function toggleCmp(id){
+  if(cmpList.includes(id)){cmpList=cmpList.filter(x=>x!==id);}
+  else{if(cmpList.length>=4){alert("Maksimum 4 məhsul");return;}cmpList.push(id);}
+  document.getElementById("cCnt").textContent=cmpList.length;
+  const strip=document.getElementById("cmpStripEl");
+  strip.style.display=cmpList.length?"block":"none";
+  document.getElementById("cmpChips").innerHTML=cmpList.map(id=>{
+    const p=products.find(x=>x.id===id);
+    return`<div class="cchip">${p.name}<button onclick="toggleCmp(${id})">×</button></div>`;
+  }).join("");
+  renderProducts();
+}
+ 
+function clearCmp(){
+  cmpList=[];
+  document.getElementById("cCnt").textContent=0;
+  document.getElementById("cmpStripEl").style.display="none";
+  renderProducts();
+}
+ 
+function openCmp(){
+  if(cmpList.length<2){goTab("products");alert("Ən az 2 məhsul seçin");return;}
+  const items=cmpList.map(id=>products.find(x=>x.id===id));
+  const fields=[["Qiymət (₼)",p=>p.price.toFixed(2),"low"],["Kalori",p=>p.cal,"low"],["Protein (g)",p=>p.protein,"high"],["Yağ (g)",p=>p.fat,"low"],["Karbohidrat",p=>p.carbs,"low"],["Natrium (mg)",p=>p.sodium,"low"],["Reytinq",p=>p.rating,"high"]];
+  let tbl=`<div style="overflow-x:auto"><table class="cmp-tbl"><thead><tr><th>Xüsusiyyət</th>${items.map(p=>`<th style="text-align:center">${p.name}<br><span style="font-weight:400;font-size:10px">${B[p.brand].n}</span></th>`).join("")}</tr></thead><tbody>`;
+  fields.forEach(([lbl,fn,dir])=>{
+    const vals=items.map(fn);const nums=vals.map(Number);
+    const best=dir==="low"?Math.min(...nums):Math.max(...nums);
+    tbl+=`<tr><td style="color:#888">${lbl}</td>${vals.map((v,i)=>`<td class="${nums[i]===best?"best":""}">${v}${nums[i]===best?" ✓":""}</td>`).join("")}</tr>`;
+  });
+  tbl+=`</tbody></table></div><div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap">${items.map(p=>`<button class="pbtn r" style="flex:none;padding:6px 12px;font-size:12px" onclick="window.open('${B[p.brand].url}','_blank')">${B[p.brand].n} sifariş ↗</button>`).join("")}</div>`;
+  showModal(`<h3>⚖️ Müqayisə nəticəsi</h3>${tbl}`);
+}
+ 
+function openProd(id){
+  const p=products.find(x=>x.id===id);
+  const b=B[p.brand];
+  const max=Math.max(p.protein,p.fat,p.carbs)||1;
+  const bars=[{n:"Protein",v:p.protein,c:"#1D9E75"},{n:"Yağ",v:p.fat,c:"#E24B4A"},{n:"Karbohidrat",v:p.carbs,c:"#EF9F27"}];
+  const content=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0">${getSVG(p.type,b.bg)}</div>
+      <div><div style="font-size:15px;font-weight:600">${p.name}</div><span class="pbrand" style="${b.pill}">${b.n}</span></div>
+    </div>
+    <div class="mtb-row">
+      <div class="mtb on" onclick="swMtab('nutr',this)">Qidalılıq</div>
+      <div class="mtb" onclick="swMtab('ingr',this)">Tərkib</div>
+      <div class="mtb" onclick="swMtab('allerg',this)">Allergenlər</div>
+    </div>
+    <div id="mt-nutr">
+      <div class="nstat-grid">
+        <div class="nstat" style="background:#fff5f5"><div class="nv" style="color:#E24B4A">${p.cal}</div><div class="nl" style="color:#A32D2D">Kalori</div></div>
+        <div class="nstat" style="background:#f0faf6"><div class="nv" style="color:#1D9E75">${p.protein}g</div><div class="nl" style="color:#0F6E56">Protein</div></div>
+        <div class="nstat" style="background:#fff9f0"><div class="nv" style="color:#EF9F27">${p.carbs}g</div><div class="nl" style="color:#854F0B">Karbohidrat</div></div>
+        <div class="nstat" style="background:#fff5f5"><div class="nv" style="color:#E24B4A">${p.fat}g</div><div class="nl" style="color:#A32D2D">Yağ</div></div>
+      </div>
+      ${bars.map(x=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span style="color:#888">${x.n}</span><span style="font-weight:600">${x.v}g</span></div><div style="background:#eee;border-radius:4px;height:7px"><div style="width:${Math.round(x.v/max*100)}%;height:7px;border-radius:4px;background:${x.c}"></div></div></div>`).join("")}
+      <div style="font-size:12px;color:#888;margin-top:5px">Natrium: ${p.sodium}mg · Şəkər: ${p.sugar}g</div>
+    </div>
+    <div id="mt-ingr" style="display:none"><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">${p.ingredients.map(i=>`<span class="ingr-pill">${i}</span>`).join("")}</div></div>
+    <div id="mt-allerg" style="display:none">${p.allergens.length?p.allergens.map(a=>`<span class="allerg-pill">${a}</span>`).join(""):'<p style="font-size:13px;color:#888;margin-top:6px">Əsas allergenlər yoxdur.</p>'}</div>
+    <div style="display:flex;gap:7px;margin-top:12px">
+      <button class="ord-btn" style="flex:1" onclick="window.open('${b.url}','_blank')">Sifariş ver ↗</button>
+      <button class="pbtn" style="padding:7px 12px" onclick="openRev(${p.id},'${p.name.replace(/'/g,"\\'")}')">💬 Rəylər</button>
+    </div>`;
+  showModal(content);
+}
+ 
+function swMtab(tab,el){
+  ["nutr","ingr","allerg"].forEach(t=>{const d=document.getElementById("mt-"+t);if(d)d.style.display=t===tab?"block":"none";});
+  document.querySelectorAll(".mtb").forEach(x=>x.classList.remove("on"));
+  el.classList.add("on");
+}
+ 
+function openRev(id,name){
+  myStars=0;
+  const rv=revs[id]||[];
+  const content=`
+    <h3>💬 ${name}</h3>
+    <div id="rvList">${rv.map(r=>`<div class="rev-card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:600">${r.u}</span><span style="color:#EF9F27;font-size:12px">${"★".repeat(r.s)}${"☆".repeat(5-r.s)} <span style="color:#888;font-size:10px">${r.d}</span></span></div><p style="font-size:12px;color:#666">${r.t}</p></div>`).join("")}</div>
+    <div style="background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;margin-top:10px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:5px">Rəy yaz:</div>
+      <div class="star-row" id="sSel">${[1,2,3,4,5].map(n=>`<span onclick="setStar(${n},${id},'${name.replace(/'/g,"\\'")}')">☆</span>`).join("")}</div>
+      <textarea id="rvTxt" rows="3" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:8px;font-size:13px;resize:none;background:#fff;font-family:inherit" placeholder="Rəyinizi yazın..."></textarea>
+      <div style="text-align:right;margin-top:6px">
+        <button class="ord-btn" style="width:auto;padding:6px 16px" onclick="submitRev(${id},'${name.replace(/'/g,"\\'")}')">Göndər</button>
+      </div>
+    </div>`;
+  showModal(content);
+}
+ 
+function setStar(n,id,name){
+  myStars=n;
+  const row=document.getElementById("sSel");
+  if(row)row.innerHTML=[1,2,3,4,5].map(i=>`<span onclick="setStar(${i},${id},'${name.replace(/'/g,"\\'")}')">` +(i<=n?"★":"☆")+"</span>").join("");
+  const stars=row?row.querySelectorAll("span"):[];
+  stars.forEach((s,i)=>s.style.color=i<n?"#EF9F27":"#ddd");
+}
+ 
+function submitRev(id,name){
+  const txt=document.getElementById("rvTxt").value.trim();
+  if(!txt||!myStars){alert("Ulduz və rəy daxil edin");return;}
+  if(!revs[id])revs[id]=[];
+  revs[id].unshift({u:"Siz",s:myStars,t:txt,d:"İndi"});
+  openRev(id,name);
+}
+ 
+function showModal(content){
+  document.getElementById("modalInner").innerHTML=`
+    <div class="modal-bg" onclick="closeModal(event)">
+      <div class="mbox" onclick="event.stopPropagation()">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+          <button class="pbtn" onclick="closeModal()" style="flex:none;padding:4px 10px">✕ Bağla</button>
+        </div>
+        ${content}
+      </div>
+    </div>`;
+  document.getElementById("pg-modal").style.display="block";
+}
+ 
+function closeModal(e){
+  if(!e||e.target===document.querySelector(".modal-bg")){
+    document.getElementById("pg-modal").style.display="none";
+  }
+}
+ 
+/* init */
+goTab("products");
+</script>
+</body>
+</html>
