@@ -406,7 +406,7 @@ const recipes={
     {s:"Bişirmə",t:"180°C-də 10–12 dəq bişirin. Son 2 dəqiqəyə qızaldıcını yandırın (grill)."}
   ],tips:"Üstünə rendelenmiş parmesan əlavə edin — Pizza Hut versiyasına daha yaxın olur."}
 };
- 
+
 const IMG_KEYWORDS={
   burger:["burger","hamburger","bun","kotlet"],
   wings:["wings","qanad","toyuq","chicken","popcorn"],
@@ -776,7 +776,7 @@ function openRecipe(id){
     </div>`;
   showModal(content);
 }
- 
+
 function showModal(content){
   document.getElementById("modalInner").innerHTML=`
     <div class="modal-bg" onclick="closeModal(event)">
@@ -798,6 +798,86 @@ function closeModal(e){
  
 /* init */
 goTab("products");
+
+/* ===== CHATBOT ===== */
+const chatCtx=[];
+const SYSTEM_PROMPT=`Sən FoodLife tətbiqinin köməkçi botusun. Azərbaycan dilində cavab ver. Qısa, dostcasına danış.
+Məlumatlar:
+Məhsullar: Zinger Burger (8.50₼, 490kal), Hot Wings 5x (6₼, 380kal), Popcorn Chicken (5.50₼, 320kal), Colonel Burger (9₼, 540kal), Big Mac (9.50₼, 550kal), McChicken (7.50₼, 420kal), McFlurry Oreo (4.50₼, 340kal), McFries Large (3.50₼, 490kal), Whopper (10₼, 670kal), Chicken Royale (8₼, 480kal), Onion Rings (4₼, 320kal), Pepperoni Pizza (14₼, 870kal), BBQ Chicken Pizza (15₼, 920kal), Garlic Bread (5₼, 310kal).
+Brendlər: KFC, McDonald's, Burger King, Pizza Hut.
+Çatdırılma: Wolt, Bolt Food, brend tətbiqləri.
+İstifadəçinin suallarına cavab ver: qiymət, kalori, resept, çatdırılma, müqayisə, tövsiyə və s.`;
+
+async function sendChat(){
+  const inp=document.getElementById("chatInput");
+  const msg=inp.value.trim();
+  if(!msg)return;
+  inp.value="";
+  addBubble(msg,"user");
+  chatCtx.push({role:"user",content:msg});
+  const typing=addBubble("...","bot",true);
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:SYSTEM_PROMPT,messages:chatCtx})
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"Xəta baş verdi.";
+    typing.remove();
+    addBubble(reply,"bot");
+    chatCtx.push({role:"assistant",content:reply});
+  }catch(e){
+    typing.remove();
+    addBubble("Bağlantı xətası. Yenidən cəhd edin.","bot");
+  }
+}
+
+function addBubble(text,role,typing=false){
+  const wrap=document.getElementById("chatMsgs");
+  const div=document.createElement("div");
+  div.style.cssText=`display:flex;justify-content:${role==="user"?"flex-end":"flex-start"};margin-bottom:8px`;
+  const bubble=document.createElement("div");
+  bubble.style.cssText=`max-width:80%;padding:9px 13px;border-radius:${role==="user"?"14px 14px 4px 14px":"14px 14px 14px 4px"};font-size:13px;line-height:1.5;background:${role==="user"?"#E24B4A":"#f2f2f2"};color:${role==="user"?"#fff":"#222"};white-space:pre-wrap`;
+  bubble.textContent=text;
+  if(typing)bubble.style.cssText+=";opacity:0.6;font-style:italic";
+  div.appendChild(bubble);
+  wrap.appendChild(div);
+  wrap.scrollTop=wrap.scrollHeight;
+  return div;
+}
+
+function toggleChat(){
+  const box=document.getElementById("chatBox");
+  const open=box.style.display==="flex";
+  box.style.display=open?"none":"flex";
+  if(!open&&chatCtx.length===0){
+    addBubble("Salam! 👋 FoodLife botuna xoş gəldiniz.\nMəhsul qiymətləri, kalorilər, reseptlər və ya çatdırılma haqqında soruşa bilərsiniz!","bot");
+  }
+}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&document.activeElement===document.getElementById("chatInput"))sendChat();
+});
 </script>
+<!-- Chatbot -->
+<button onclick="toggleChat()" id="chatBtn" style="position:fixed;bottom:20px;right:20px;z-index:200;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#E24B4A,#EF9F27);border:none;cursor:pointer;font-size:24px;box-shadow:0 4px 16px rgba(226,75,74,0.4);transition:transform 0.2s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">🤖</button>
+
+<div id="chatBox" style="display:none;position:fixed;bottom:82px;right:20px;z-index:200;width:320px;max-width:calc(100vw - 40px);flex-direction:column;border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);border:1px solid #e8e8e8">
+  <div style="background:linear-gradient(135deg,#E24B4A,#EF9F27);padding:12px 14px;display:flex;align-items:center;gap:8px">
+    <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+    <div style="flex:1">
+      <div style="color:#fff;font-size:13px;font-weight:600">FoodLife Köməkçisi</div>
+      <div style="color:rgba(255,255,255,0.8);font-size:11px">AI · Hazırdır</div>
+    </div>
+    <button onclick="toggleChat()" style="background:rgba(255,255,255,0.2);border:none;border-radius:8px;color:#fff;font-size:13px;cursor:pointer;padding:4px 8px">✕</button>
+  </div>
+  <div id="chatMsgs" style="background:#fff;padding:12px;height:300px;overflow-y:auto;display:flex;flex-direction:column"></div>
+  <div style="background:#fff;border-top:1px solid #f0f0f0;padding:9px 10px;display:flex;gap:7px">
+    <input id="chatInput" type="text" placeholder="Sual yazın..." style="flex:1;border:1px solid #ddd;border-radius:8px;padding:8px 11px;font-size:13px;outline:none;font-family:inherit" onfocus="this.style.borderColor='#E24B4A'" onblur="this.style.borderColor='#ddd'">
+    <button onclick="sendChat()" style="background:#E24B4A;border:none;border-radius:8px;color:#fff;padding:8px 13px;cursor:pointer;font-size:15px">➤</button>
+  </div>
+</div>
+
 </body>
 </html>
