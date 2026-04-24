@@ -320,6 +320,93 @@ const revs={
   12:[{u:"Əli C.",s:5,t:"Mükəmməl pizza!",d:"1 gün əvvəl"},{u:"Şəbnəm K.",s:4,t:"Ləzzətlidir.",d:"4 gün əvvəl"}]
 };
  
+const recipes={
+  1:{title:"Ev Zinger Burgeri",time:"30 dəq",difficulty:"Orta",servings:2,steps:[
+    {s:"Hazırlıq",t:"Toyuq filesini yarım sm qalınlığında döyün. Baharatlı xəmir üçün un, bibər tozu, sarımsaq tozu, duz qarışdırın."},
+    {s:"Marinad",t:"Toyuğu kefir və baharatlarda 20 dəqiqə saxlayın. Bu onu yumşaq edir."},
+    {s:"Qızartma",t:"Yağı 175°C-ə qızındırın. Toyuğu xəmirə batırıb qızardın — hər tərəfdən 4-5 dəqiqə."},
+    {s:"Yığma",t:"Köklü çörəyi qızardın. Alt hissəyə mayonez sürtün, kəlam, toyuq, turşu, üst çörəyi qoyun."}
+  ],tips:"Daha xırtıldayan olsun deyə xəmirə 1 xörək qaşığı nişasta əlavə edin."},
+  2:{title:"Evdə Baharatlı Qanadlar",time:"45 dəq",difficulty:"Asan",servings:2,steps:[
+    {s:"Marinad",t:"Qanadları duz, bibər tozu, sarımsaq tozu, kağız tozu ilə ovalayın. 30 dəq saxlayın."},
+    {s:"Xəmir",t:"Un, baharatlı kağız tozu, duz, bibər tozu qarışdırın. Qanadları bu xəmirə batırın."},
+    {s:"Qızartma",t:"175°C yağda 12–15 dəqiqə qızardın. Daxili temp 74°C olmalıdır."},
+    {s:"Sous",t:"Kəsmikəsmik yağı, isti sous, bal, sarımsaq tozu ilə baharatlı sous hazırlayın."}
+  ],tips:"Fırında bişirmək üçün: 200°C-də 35 dəq, ara-sıra çevirin."},
+  3:{title:"Popcorn Toyuq",time:"25 dəq",difficulty:"Asan",servings:3,steps:[
+    {s:"Hazırlıq",t:"Toyuğu kiçik parçalara kəsin (3–4 sm). Yumurta + südü çırpın."},
+    {s:"Xəmir",t:"Un, nişasta, duz, sarımsaq tozu, bibər tozunu qarışdırın. Toyuğu əvvəl yumurtaya, sonra una batırın."},
+    {s:"Qızartma",t:"180°C yağda 3–4 dəq qızardın, qızılı rəng alana qədər. Kiçik parça tez bişir!"},
+    {s:"Servis",t:"Kağız üstündə yağı süzün. Isti servis edin, yanında ranch sous verin."}
+  ],tips:"İkiqat xəmir — daha xırtıldayan olur. Bir dəfə una batırıb yenidən yumurtaya batırın."},
+  4:{title:"Colonel Burgeri",time:"35 dəq",difficulty:"Orta",servings:2,steps:[
+    {s:"Toyuq",t:"Fileni döyün, baharatlı xəmirə batırın (un + 11 ədviyyat). Qızardın."},
+    {s:"Xüsusi sous",t:"Mayonez, xardal, limon suyu, sarımsaq tozu, şəkər qarışdırın. 10 dəq soyudun."},
+    {s:"Yığma",t:"Çörəyi qızardın. Sous, pomidor, kəlam, toyuq sırasında yığın."},
+    {s:"Son touch",t:"Servis etmədən əvvəl çörəyin üstünə kərə yağı sürtün."}
+  ],tips:"Orijinal 11 ədviyyat: duz, göy soğan tozu, sarımsaq tozu, qara bibər, qırmızı bibər, zəncəfil, oregano, tağ, kəkotu, acı bibər, paprika."},
+  5:{title:"Ev Big Mac",time:"30 dəq",difficulty:"Asan",servings:2,steps:[
+    {s:"Big Mac sous",t:"Mayonez, xardal, turşu doğraması, soğan tozu, sirke, paprika, sarımsaq tozunu qarışdırın. Soyudun."},
+    {s:"Kotletlər",t:"Mal ətini 2 mm qalınlığında yastı formalaşdırın. Qızartqacda her iki tərəfini 2–3 dəq qızardın."},
+    {s:"Çörəyi qızartma",t:"Üç qatlı çörəyin hamısını sarı tərəfi aşağı qızartın."},
+    {s:"Yığma",t:"Alt çörək → sous → soğan → turşu → kəlam → pendir → kotlet → orta çörək → sous → kəlam → kotlet → üst çörək."}
+  ],tips:"Sous ən az 1 saat soyuducuda saxlayın — dadı açılır."},
+  6:{title:"McChicken",time:"20 dəq",difficulty:"Asan",servings:2,steps:[
+    {s:"Toyuq",t:"Fileni döyün, un + yumurta + çörək unu (panko) ilə xəmirləyin."},
+    {s:"Qızartma",t:"175°C yağda 4–5 dəq qızardın hər tərəfdən."},
+    {s:"Sous",t:"Mayonez + bir az limon suyu qarışdırın."},
+    {s:"Yığma",t:"Çörəyə sous, tər kəlam, toyuq qoyun. Isti servis edin."}
+  ],tips:"Panko çörək unu xüsusi xırtıldayan məhsul verir."},
+  7:{title:"McFlurry Oreo",time:"10 dəq",difficulty:"Asan",servings:2,steps:[
+    {s:"Dondurma bazası",t:"Yüksək keyfiyyətli vanil dondurma bir az yumuşayana qədər gözləyin."},
+    {s:"Oreo",t:"5–6 ədəd Oreo biskvitini qaba parçalara sındırın (çox incə olmasın)."},
+    {s:"Qarışdırma",t:"Dondurmanı kasaya qoyun, Oreo parçalarını üstünə töküb qaşıqla yüngülcə qarışdırın."},
+    {s:"Karamel",t:"Üstünə hazır karamel sous töküb dərhal servis edin."}
+  ],tips:"Fərqli versiyon: Oreo əvəzinə Nutella + şokolad parçaları istifadə edin."},
+  8:{title:"Qaytarma Kartof (McDonald stili)",time:"30 dəq",difficulty:"Asan",servings:3,steps:[
+    {s:"Hazırlıq",t:"Kartofları nazik çubuq şəklində kəsin. Soyuq suda 30 dəq saxlayın — nişastanı çıxarır."},
+    {s:"İlkin bişirmə",t:"Qurudun. 160°C yağda 3 dəq qızardın. Çıxarıb soyudun."},
+    {s:"Son qızartma",t:"185°C-də yenidən 2–3 dəq qızardın — qızılı və xırtıldayan olana qədər."},
+    {s:"Duz",t:"Dərhal çıxarıb iri dənəli duz tökün. İsti servis edin."}
+  ],tips:"2 mərhələli qızartma — McDonaldsin sirrinin əsasıdır. Soyuq sudan çıxardıqdan sonra mütləq qurudun."},
+  9:{title:"Ev Whopperi",time:"25 dəq",difficulty:"Asan",servings:2,steps:[
+    {s:"Kotlet",t:"İri mal əti kotlet hazırlayın (180q). Barbecue izgarada hər tərəfini 3–4 dəq bişirin."},
+    {s:"Çörək",t:"Sezam çörəyini içi tərəfdən qızardın."},
+    {s:"Sous",t:"Mayonez, ketçup, xardal qarışığı hazırlayın."},
+    {s:"Yığma",t:"Çörək → sous → kəlam → pomidor → soğan halqası → turşu → kotlet → sous → üst çörək."}
+  ],tips:"Barbecueda bişirmək — Whopperin əsas fərqidir. Xüsusi ləzzət verir."},
+  10:{title:"Chicken Royale",time:"25 dəq",difficulty:"Orta",servings:2,steps:[
+    {s:"Toyuq filesi",t:"Geniş toyuq filesi götürün. Baharatlı xəmirə (un + paprika + sarımsaq) batırın."},
+    {s:"Qızartma",t:"180°C yağda hər tərəfdən 4–5 dəq qızardın."},
+    {s:"Hollandaise sous",t:"Yumurta sarısı, limon suyu, kərə yağı, duz qaynaq banyosunda çırpın."},
+    {s:"Yığma",t:"Çörəyə sous, pomidor, tər kəlam, toyuq qoyun."}
+  ],tips:"Sous hazırlamağa vaxtınız yoxdursa — Dijon xardal + mayonez mükəmməl əvəzedicisidir."},
+  11:{title:"Soğan Halqaları",time:"20 dəq",difficulty:"Asan",servings:3,steps:[
+    {s:"Hazırlıq",t:"Böyük soğanı 1 sm qalınlığında halqalara kəsin. Dairələri ayırın."},
+    {s:"Xəmir",t:"Un, pivə (və ya soda su), duz, paprika, sarımsaq tozu qarışdırın. Qatı olmamalıdır."},
+    {s:"Xəmirləmə",t:"Halqaları əvvəl unla sürün, sonra xəmirə batırın."},
+    {s:"Qızartma",t:"180°C yağda 2–3 dəq qızardın, qızılı rəng alana qədər."}
+  ],tips:"Pivəli xəmir daha qabarcıqlı olur. Soda su da işləyir."},
+  12:{title:"Ev Pepperoni Pizzası",time:"60 dəq",difficulty:"Orta",servings:4,steps:[
+    {s:"Xəmir",t:"Un, maya, duz, zeytun yağı, isti su qarışdırın. 10 dəq yoğurun. 1 saat qabarmasına qoyun."},
+    {s:"Sous",t:"Domates püresi, sarımsaq, oregano, duz, şəkər bişirin. Soyudun."},
+    {s:"Yığma",t:"Xəmiri yayın (30 sm dairə). Sous, mozzarella, pepperoni dilimləyin."},
+    {s:"Bişirmə",t:"Fırını 230°C-ə qızındırın. Pizzanı 12–15 dəq bişirin."}
+  ],tips:"Daş fırın effekti üçün: pizzanı qızardılmış tavaya qoyun. Alt tərəf xırtıldayan olur."},
+  13:{title:"BBQ Toyuq Pizzası",time:"60 dəq",difficulty:"Orta",servings:4,steps:[
+    {s:"Xəmir",t:"Standart pizza xəmiri hazırlayın. 1 saat qabarmasına qoyun."},
+    {s:"BBQ sous",t:"Ketçup, qəhvəyi şəkər, Worcestershire, sarımsaq, sirkə qaynadın (15 dəq)."},
+    {s:"Toyuq",t:"Toyuq sinəsini ızgarada bişirin, kiçik parçalara kəsin."},
+    {s:"Yığma",t:"Xəmir → BBQ sous → mozzarella → toyuq → soğan → bibər → üst pizza. 220°C-də 15 dəq bişirin."}
+  ],tips:"Üstünə dərhal bişdikdən sonra tər kişniş serpin — rəng və dad verir."},
+  14:{title:"Sarımsaqlı Çörək",time:"15 dəq",difficulty:"Çox asan",servings:4,steps:[
+    {s:"Sarımsaq yağı",t:"Yumşaq kərə yağı + doğranmış sarımsaq + maydanoz + duz qarışdırın."},
+    {s:"Çörək",t:"Çörəyi uzunluğuna yarın (baguette idealdır)."},
+    {s:"Yağlama",t:"Hər iki yarıya sarımsaq yağını bol sürtün."},
+    {s:"Bişirmə",t:"180°C-də 10–12 dəq bişirin. Son 2 dəqiqəyə qızaldıcını yandırın (grill)."}
+  ],tips:"Üstünə rendelenmiş parmesan əlavə edin — Pizza Hut versiyasına daha yaxın olur."}
+};
+ 
 const IMG_KEYWORDS={
   burger:["burger","hamburger","bun","kotlet"],
   wings:["wings","qanad","toyuq","chicken","popcorn"],
@@ -453,6 +540,7 @@ function renderProducts(){
         <div class="pcal">${p.cal} kal · ${p.protein}g protein · ${p.fat}g yağ</div>
         <div class="pbtns">
           <button class="pbtn" onclick="openProd(${p.id})">📋 Tərkib</button>
+          <button class="pbtn" onclick="openRecipe(${p.id})" style="color:#27500A;border-color:#b2d98b">🍳</button>
           <button class="pbtn" onclick="openRev(${p.id},'${p.name.replace(/'/g,"\\'")}')">💬</button>
           <button class="pbtn${sel?" sel-btn":""}" onclick="toggleCmp(${p.id})">${sel?"✓":"+"}</button>
           <button class="pbtn r" onclick="window.open('${b.url}','_blank')">↗</button>
@@ -650,6 +738,43 @@ function submitRev(id,name){
   if(!revs[id])revs[id]=[];
   revs[id].unshift({u:"Siz",s:myStars,t:txt,d:"İndi"});
   openRev(id,name);
+}
+ 
+function openRecipe(id){
+  const p=products.find(x=>x.id===id);
+  const r=recipes[id];
+  if(!r){showModal(`<h3>🍳 ${p.name} — Resept</h3><p style="color:#888;font-size:13px;margin-top:8px">Bu məhsul üçün resept hələ əlavə edilməyib.</p>`);return;}
+  const b=B[p.brand];
+  const diffColor={Asan:"#1D9E75","Çox asan":"#27500A",Orta:"#EF9F27",Çətin:"#E24B4A"};
+  const content=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover"></div>
+      <div>
+        <div style="font-size:15px;font-weight:600">🍳 ${r.title}</div>
+        <span class="pbrand" style="${b.pill}">${b.n}</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">
+      <span style="background:#fff9f0;color:#854F0B;font-size:12px;padding:3px 10px;border-radius:8px;border:1px solid #ffd096">⏱ ${r.time}</span>
+      <span style="background:#f0faf6;color:${diffColor[r.difficulty]||'#222'};font-size:12px;padding:3px 10px;border-radius:8px;border:1px solid #b2e8d0">📊 ${r.difficulty}</span>
+      <span style="background:#f5f0ff;color:#5b3fa0;font-size:12px;padding:3px 10px;border-radius:8px;border:1px solid #d0bfff">👥 ${r.servings} pors</span>
+    </div>
+    <div style="margin-bottom:10px">
+      ${r.steps.map((st,i)=>`
+        <div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start">
+          <div style="min-width:26px;height:26px;border-radius:50%;background:#E24B4A;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#222;margin-bottom:2px">${st.s}</div>
+            <div style="font-size:12px;color:#555;line-height:1.5">${st.t}</div>
+          </div>
+        </div>`).join("")}
+    </div>
+    ${r.tips?`<div style="background:#fffbe0;border:1px solid #ffd96e;border-radius:8px;padding:9px 12px;font-size:12px;color:#7A5A00"><b>💡 İpucu:</b> ${r.tips}</div>`:""}
+    <div style="display:flex;gap:7px;margin-top:12px">
+      <button class="ord-btn" style="flex:1" onclick="window.open('${b.url}','_blank')">Sifariş ver ↗</button>
+      <button class="pbtn" style="padding:7px 12px" onclick="openProd(${p.id})">📋 Tərkib</button>
+    </div>`;
+  showModal(content);
 }
  
 function showModal(content){
